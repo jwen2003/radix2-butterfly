@@ -1,5 +1,7 @@
 # Radix-2 Fixed-Point Butterfly
 
+English | [简体中文](README_zh-CN.md)
+
 A synthesizable SystemVerilog implementation of a signed Q1.15 DIF Radix-2 complex butterfly, developed as an end-to-end RTL and microarchitecture study:
 
 ```text
