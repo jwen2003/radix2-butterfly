@@ -1,0 +1,73 @@
+# Verilator and local builds
+build/
+obj_dir/
+obj_dir_*/
+objects/
+
+# OpenROAD generated artifacts
+logs/
+results/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Waveforms and simulation outputs
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+
+# Physical-design databases and large generated artifacts
+*.odb
+*.db
+*.gds
+*.gds2
+*.def
+*.spef
+*.sdf
+
+# Editor and operating-system metadata
+.vscode/
+.idea/
+.vs/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local notes not intended for publication
+定点数位宽与溢出术语速查.md
+
+# Downloaded duplicate filenames
+*\([0-9]\).md
+*\([0-9]\).sv
+*\([0-9]\).py
+
+# OpenROAD reports are generated artifacts by default.
+reports/**
+
+# Keep only curated evidence.
+!reports/06_critical_paths.txt
+!reports/yosys/
+!reports/yosys/orfs_openroad_version.txt
+!reports/yosys/orfs_yosys_version.txt
+!reports/yosys/v0_generic_synthesis.log
+!reports/yosys/v1_generic_synthesis.log
+
+!reports/nangate45/
+!reports/nangate45/butterfly_comb_eval/
+!reports/nangate45/butterfly_comb_eval/400mhz/
+!reports/nangate45/butterfly_comb_eval/400mhz/6_finish.rpt
+!reports/nangate45/butterfly_comb_eval/base/
+!reports/nangate45/butterfly_comb_eval/base/6_finish.rpt
+!reports/nangate45/butterfly_comb_eval/fmax_425mhz/
+!reports/nangate45/butterfly_comb_eval/fmax_425mhz/6_finish.rpt
+
+!reports/nangate45/butterfly_pipe_eval/
+!reports/nangate45/butterfly_pipe_eval/400mhz/
+!reports/nangate45/butterfly_pipe_eval/400mhz/6_finish.rpt
+!reports/nangate45/butterfly_pipe_eval/base/
+!reports/nangate45/butterfly_pipe_eval/base/6_finish.rpt
+!reports/nangate45/butterfly_pipe_eval/fmax_640mhz/
+!reports/nangate45/butterfly_pipe_eval/fmax_640mhz/6_finish.rpt

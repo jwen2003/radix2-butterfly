@@ -1,0 +1,361 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Running command `
+read_verilog -sv rtl/v1/butterfly_pipe.sv;
+hierarchy -check -top butterfly_pipe;
+proc;
+opt;
+check;
+stat;
+' --
+
+1. Executing Verilog-2005 frontend: rtl/v1/butterfly_pipe.sv
+Parsing SystemVerilog input from `rtl/v1/butterfly_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\butterfly_pipe'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \butterfly_pipe
+
+2.2. Analyzing design hierarchy..
+Top module:  \butterfly_pipe
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/v1/butterfly_pipe.sv:224$31 in module butterfly_pipe.
+Marked 8 switch rules as full_case in process $proc$rtl/v1/butterfly_pipe.sv:0$12 in module butterfly_pipe.
+Marked 1 switch rules as full_case in process $proc$rtl/v1/butterfly_pipe.sv:133$11 in module butterfly_pipe.
+Marked 1 switch rules as full_case in process $proc$rtl/v1/butterfly_pipe.sv:100$1 in module butterfly_pipe.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 7 redundant assignments.
+Promoted 30 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~14 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+     1/9: $0\sat_y1_im[0:0]
+     2/9: $0\sat_y1_re[0:0]
+     3/9: $0\sat_y0_im[0:0]
+     4/9: $0\sat_y0_re[0:0]
+     5/9: $0\valid_out[0:0]
+     6/9: $0\y1_im[15:0]
+     7/9: $0\y1_re[15:0]
+     8/9: $0\y0_im[15:0]
+     9/9: $0\y0_re[15:0]
+Creating decoders for process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+     1/16: $2\sat_y1_im_next[0:0]
+     2/16: $2\y1_im_next[15:0]
+     3/16: $1\sat_y1_im_next[0:0]
+     4/16: $1\y1_im_next[15:0]
+     5/16: $2\sat_y1_re_next[0:0]
+     6/16: $2\y1_re_next[15:0]
+     7/16: $1\sat_y1_re_next[0:0]
+     8/16: $1\y1_re_next[15:0]
+     9/16: $2\sat_y0_im_next[0:0]
+    10/16: $2\y0_im_next[15:0]
+    11/16: $1\sat_y0_im_next[0:0]
+    12/16: $1\y0_im_next[15:0]
+    13/16: $2\sat_y0_re_next[0:0]
+    14/16: $2\y0_re_next[15:0]
+    15/16: $1\sat_y0_re_next[0:0]
+    16/16: $1\y0_re_next[15:0]
+Creating decoders for process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+     1/7: $0\valid_s2[0:0]
+     2/7: $0\sum_im_s2[16:0]
+     3/7: $0\sum_re_s2[16:0]
+     4/7: $0\m3_s2[32:0]
+     5/7: $0\m2_s2[32:0]
+     6/7: $0\m1_s2[32:0]
+     7/7: $0\m0_s2[32:0]
+Creating decoders for process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+Creating decoders for process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+     1/7: $0\valid_s1[0:0]
+     2/7: $0\w_im_s1[15:0]
+     3/7: $0\w_re_s1[15:0]
+     4/7: $0\diff_im_s1[16:0]
+     5/7: $0\diff_re_s1[16:0]
+     6/7: $0\sum_im_s1[16:0]
+     7/7: $0\sum_re_s1[16:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\butterfly_pipe.\p_re_full' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_full' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_base' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_base' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_guard' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_sticky' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_kept_lsb' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_round_up' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_guard' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_sticky' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_kept_lsb' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_round_up' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_re_rounded' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\p_im_rounded' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\y0_re_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\y0_im_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\y1_re_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\y1_im_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\sat_y0_re_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\sat_y0_im_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\sat_y1_re_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\sat_y1_im_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+No latch inferred for signal `\butterfly_pipe.\m0_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\m1_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\m2_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\m3_next' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\diff_re_mul_ext' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\diff_im_mul_ext' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\w_re_mul_ext' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+No latch inferred for signal `\butterfly_pipe.\w_im_mul_ext' from process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\butterfly_pipe.\valid_out' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$221' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\y0_re' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$222' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\y0_im' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$223' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\y1_re' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$224' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\y1_im' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$225' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sat_y0_re' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$226' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sat_y0_im' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$227' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sat_y1_re' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$228' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sat_y1_im' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+  created $dff cell `$procdff$229' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\valid_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$230' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\m0_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$231' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\m1_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$232' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\m2_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$233' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\m3_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$234' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sum_re_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$235' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sum_im_s2' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+  created $dff cell `$procdff$236' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\valid_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$237' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sum_re_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$238' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\sum_im_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$239' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\diff_re_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$240' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\diff_im_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$241' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\w_re_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$242' with positive edge clock.
+Creating register for signal `\butterfly_pipe.\w_im_s1' using process `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+  created $dff cell `$procdff$243' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+Removing empty process `butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:224$31'.
+Found and cleaned up 8 empty switches in `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+Removing empty process `butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$12'.
+Found and cleaned up 2 empty switches in `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+Removing empty process `butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:133$11'.
+Removing empty process `butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:0$6'.
+Found and cleaned up 2 empty switches in `\butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+Removing empty process `butterfly_pipe.$proc$rtl/v1/butterfly_pipe.sv:100$1'.
+Cleaned up 14 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly_pipe.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly_pipe.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly_pipe'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly_pipe..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$147.
+    dead port 1/2 on $mux $procmux$141.
+    dead port 1/2 on $mux $procmux$129.
+    dead port 1/2 on $mux $procmux$123.
+    dead port 1/2 on $mux $procmux$111.
+    dead port 1/2 on $mux $procmux$105.
+    dead port 1/2 on $mux $procmux$93.
+    dead port 1/2 on $mux $procmux$87.
+Removed 8 multiplexer ports.
+<suppressed ~23 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly_pipe.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly_pipe'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$236 ($dff) from module butterfly_pipe (D = \sum_im_s1, Q = \sum_im_s2).
+Adding SRST signal on $procdff$237 ($dff) from module butterfly_pipe (D = \valid_in, Q = \valid_s1, rval = 1'0).
+Adding EN signal on $procdff$238 ($dff) from module butterfly_pipe (D = $add$rtl/v1/butterfly_pipe.sv:107$2_Y, Q = \sum_re_s1).
+Adding EN signal on $procdff$239 ($dff) from module butterfly_pipe (D = $add$rtl/v1/butterfly_pipe.sv:108$3_Y, Q = \sum_im_s1).
+Adding EN signal on $procdff$240 ($dff) from module butterfly_pipe (D = $sub$rtl/v1/butterfly_pipe.sv:109$4_Y, Q = \diff_re_s1).
+Adding EN signal on $procdff$241 ($dff) from module butterfly_pipe (D = $sub$rtl/v1/butterfly_pipe.sv:110$5_Y, Q = \diff_im_s1).
+Adding EN signal on $procdff$242 ($dff) from module butterfly_pipe (D = \w_re, Q = \w_re_s1).
+Adding EN signal on $procdff$243 ($dff) from module butterfly_pipe (D = \w_im, Q = \w_im_s1).
+Adding SRST signal on $procdff$221 ($dff) from module butterfly_pipe (D = \valid_s2, Q = \valid_out, rval = 1'0).
+Adding EN signal on $procdff$222 ($dff) from module butterfly_pipe (D = \y0_re_next, Q = \y0_re).
+Adding EN signal on $procdff$223 ($dff) from module butterfly_pipe (D = \y0_im_next, Q = \y0_im).
+Adding EN signal on $procdff$224 ($dff) from module butterfly_pipe (D = \y1_re_next, Q = \y1_re).
+Adding EN signal on $procdff$225 ($dff) from module butterfly_pipe (D = \y1_im_next, Q = \y1_im).
+Adding SRST signal on $procdff$226 ($dff) from module butterfly_pipe (D = \sat_y0_re_next, Q = \sat_y0_re, rval = 1'0).
+Adding SRST signal on $procdff$227 ($dff) from module butterfly_pipe (D = \sat_y0_im_next, Q = \sat_y0_im, rval = 1'0).
+Adding SRST signal on $procdff$228 ($dff) from module butterfly_pipe (D = \sat_y1_re_next, Q = \sat_y1_re, rval = 1'0).
+Adding SRST signal on $procdff$229 ($dff) from module butterfly_pipe (D = \sat_y1_im_next, Q = \sat_y1_im, rval = 1'0).
+Adding SRST signal on $procdff$230 ($dff) from module butterfly_pipe (D = \valid_s1, Q = \valid_s2, rval = 1'0).
+Adding EN signal on $procdff$231 ($dff) from module butterfly_pipe (D = \m0_next, Q = \m0_s2).
+Adding EN signal on $procdff$232 ($dff) from module butterfly_pipe (D = \m1_next, Q = \m1_s2).
+Adding EN signal on $procdff$233 ($dff) from module butterfly_pipe (D = \m2_next, Q = \m2_s2).
+Adding EN signal on $procdff$234 ($dff) from module butterfly_pipe (D = \m3_next, Q = \m3_s2).
+Adding EN signal on $procdff$235 ($dff) from module butterfly_pipe (D = \sum_re_s1, Q = \sum_re_s2).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly_pipe..
+Removed 43 unused cells and 207 unused wires.
+<suppressed ~44 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly_pipe.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly_pipe..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly_pipe.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly_pipe'.
+<suppressed ~102 debug messages>
+Removed a total of 34 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $auto$ff.cc:266:slice$296 ($dffe) from module butterfly_pipe (D = $2\y1_im_next[15:0], Q = \y1_im, rval = 16'0111111111111111).
+Adding SRST signal on $auto$ff.cc:266:slice$291 ($dffe) from module butterfly_pipe (D = $2\y1_re_next[15:0], Q = \y1_re, rval = 16'0111111111111111).
+Adding SRST signal on $auto$ff.cc:266:slice$286 ($dffe) from module butterfly_pipe (D = $2\y0_im_next[15:0], Q = \y0_im, rval = 16'0111111111111111).
+Adding SRST signal on $auto$ff.cc:266:slice$281 ($dffe) from module butterfly_pipe (D = $2\y0_re_next[15:0], Q = \y0_re, rval = 16'0111111111111111).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly_pipe..
+Removed 4 unused cells and 38 unused wires.
+<suppressed ~9 debug messages>
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly_pipe.
+
+4.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly_pipe..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+4.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly_pipe.
+Performed a total of 0 changes.
+
+4.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly_pipe'.
+Removed a total of 0 cells.
+
+4.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly_pipe..
+
+4.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly_pipe.
+
+4.23. Finished OPT passes. (There is nothing left to do.)
+
+5. Executing CHECK pass (checking for obvious problems).
+Checking module butterfly_pipe...
+Found and reported 0 problems.
+
+6. Printing statistics.
+
+=== butterfly_pipe ===
+
+   Number of wires:                 86
+   Number of wire bits:           1010
+   Number of public wires:          58
+   Number of public wire bits:     858
+   Number of ports:                 18
+   Number of port bits:            168
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 67
+     $add                            5
+     $and                            2
+     $dffe                          12
+     $gt                             4
+     $lt                             4
+     $mul                            4
+     $mux                           12
+     $not                            2
+     $or                             2
+     $reduce_and                     3
+     $reduce_or                      3
+     $sdff                           7
+     $sdffce                         4
+     $sub                            3
+
+End of script. Logfile hash: 678b88f82c, CPU: user 0.06s system 0.01s, MEM: 15.45 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 16% 5x opt_expr (0 sec), 14% 3x opt_clean (0 sec), ...
