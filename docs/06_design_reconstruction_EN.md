@@ -35,9 +35,9 @@ For both peak implementations, the worst overall path is also the worst register
 
 ## 3. From Mathematics to Hardware
 
-$$
+```math
 Y_0=A+B,\qquad Y_1=(A-B)W
-$$
+```
 
 ```mermaid
 flowchart LR
@@ -96,7 +96,7 @@ V0 has no internal register boundary, so the complete Y1 chain must propagate wi
 | Setup slack | +0.023 ns |
 | Type | Register-to-register |
 
-Because $Y_{1,\mathrm{re}}=(A_{\mathrm{re}}-B_{\mathrm{re}})W_{\mathrm{re}}-(A_{\mathrm{im}}-B_{\mathrm{im}})W_{\mathrm{im}}$, an `a_im`-to-`y1_re` path necessarily traverses imaginary subtraction, multiplication, real-product combination, and quantization. This confirms the limiting path is the full Y1 chain rather than Y0.
+Because `Y1_re = (A_re - B_re) × W_re - (A_im - B_im) × W_im`, an `a_im`-to-`y1_re` path necessarily traverses imaginary subtraction, multiplication, real-product combination, and quantization. This confirms the limiting path is the full Y1 chain rather than Y0.
 
 ![V0 425 MHz critical path ending at y1_re](images/V0_425MHz_endpoint_register.png)
 
@@ -180,7 +180,7 @@ multiplication with product combination
 product combination with RNE and saturation
 ```
 
-The full V0 chain becomes three timing stages, moving the bottleneck to the heaviest single operation: one 17×16 multiply. This explains the 640 versus 425 MHz tested points, direct throughput gain at equal $II=1$, 337 extra sequential cells, larger clock network, and lower high-frequency repair pressure.
+The full V0 chain becomes three timing stages, moving the bottleneck to the heaviest single operation: one 17×16 multiply. This explains the 640 versus 425 MHz tested points, direct throughput gain at equal `II=1`, 337 extra sequential cells, larger clock network, and lower high-frequency repair pressure.
 
 ## 6. Area and Physical Reconstruction
 
@@ -228,7 +228,7 @@ V1 meets 500 MHz and passes the tested 640 MHz point. Any change must first spec
 
 ### 9.1 A: Freeze V1
 
-V1 already passes the stated target, retains $II=1$, has bit-exact verification, and has physically explained critical paths. Freezing avoids expanding scope without an unmet requirement. This is the selected MVP decision.
+V1 already passes the stated target, retains `II=1`, has bit-exact verification, and has physically explained critical paths. Freezing avoids expanding scope without an unmet requirement. This is the selected MVP decision.
 
 ### 9.2 B: Add a Register After Stage 3
 
@@ -248,7 +248,7 @@ Replacing four real multiplications with three may reduce multiplier area but ad
 
 ### 9.6 F: Twiddle Specialization
 
-Constant or restricted twiddles may simplify multiplication but change the generic externally supplied-$W$ PE into an FFT-stage-specific unit. This is valid only under a new product scope.
+Constant or restricted twiddles may simplify multiplication but change the generic PE with externally supplied `W` into an FFT-stage-specific unit. This is valid only under a new product scope.
 
 ### 9.7 G: Register Enables and Power Strategy
 
@@ -258,7 +258,7 @@ The current design suppresses some invalid-cycle state changes, but vectorless p
 
 ### 10.1 MVP Decision
 
-Freeze V1 because it meets 500 MHz, reaches the tested 640 MHz point, maintains $II=1$, and converts the full Y1 path into a single multiplier stage at a measured area/latency cost.
+Freeze V1 because it meets 500 MHz, reaches the tested 640 MHz point, maintains `II=1`, and converts the full Y1 path into a single multiplier stage at a measured area/latency cost.
 
 ### 10.2 Optional Post-Release Experiments
 
@@ -270,6 +270,6 @@ A V2 must state a measurable requirement, preserve or deliberately revise the nu
 
 ## 11. Final Conclusion
 
-V0's critical path spans the complete Y1 arithmetic chain from an `a_im` input register to a `y1_re` output register. V1's three registered boundaries separate subtraction, multiplication, and quantization, reducing the worst stage to one 17×16 signed multiplier. At a common 400 MHz point this costs about 16.4% area; the highest fully passing tested point rises from 425 to 640 MHz, producing about 50.6% greater peak throughput at $II=1$.
+V0's critical path spans the complete Y1 arithmetic chain from an `a_im` input register to a `y1_re` output register. V1's three registered boundaries separate subtraction, multiplication, and quantization, reducing the worst stage to one 17×16 signed multiplier. At a common 400 MHz point this costs about 16.4% area; the highest fully passing tested point rises from 425 to 640 MHz, producing about 50.6% greater peak throughput at `II=1`.
 
 Post-route physical inspection supports the endpoint and HA/FA-path interpretation and rejects one intuitive change: further splitting product combination, RNE, and saturation cannot shorten the current multiplier path. A genuinely higher-frequency successor must split or replace the multiplier itself; a shallower version pursues a different area/latency objective. The evidence therefore supports freezing V1 as the final MVP.

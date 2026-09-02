@@ -10,7 +10,7 @@ It explains why the design is structured this way and what the engineering loop 
 
 The project uses a DIF Radix-2 complex Butterfly processing element to complete the following engineering loop:
 
-$$
+```math
 \text{design intent}
 \rightarrow
 \text{fixed-point model}
@@ -24,9 +24,9 @@ $$
 \text{result analysis}
 \rightarrow
 \text{design revision}
-$$
+```
 
-The primary success criterion is not the highest possible maximum clock frequency, $F_{\max}$. The goal is a processing element that is:
+The primary success criterion is not the highest possible maximum clock frequency, `F_max`. The goal is a processing element that is:
 
 - functionally correct;
 - behaviorally well specified;
@@ -36,47 +36,47 @@ The primary success criterion is not the highest possible maximum clock frequenc
 - supported by verification and synthesis evidence; and
 - capable of at least one justified revision based on that evidence.
 
-A higher $F_{\max}$ is one metric, not the sole objective. Higher frequency may require more registers, more area, greater cycle latency, greater design and verification complexity, or higher power. The project therefore evaluates tradeoffs instead of assuming that the highest-frequency implementation is always best.
+A higher `F_max` is one metric, not the sole objective. Higher frequency may require more registers, more area, greater cycle latency, greater design and verification complexity, or higher power. The project therefore evaluates tradeoffs instead of assuming that the highest-frequency implementation is always best.
 
 ## 3. Functional Definition
 
 The MVP implements a DIF Radix-2 complex Butterfly:
 
-$$
+```math
 Y_0=A+B
-$$
+```
 
-$$
+```math
 Y_1=(A-B)\times W
-$$
+```
 
-where $A$, $B$, and $W$ are complex inputs, $Y_0$ and $Y_1$ are complex outputs, and $W$ is an externally supplied twiddle factor.
+where `A`, `B`, and `W` are complex inputs, `Y_0` and `Y_1` are complex outputs, and `W` is an externally supplied twiddle factor.
 
 Expanded into real components:
 
-$$
+```math
 Y_{0,\mathrm{re}}=A_{\mathrm{re}}+B_{\mathrm{re}}
-$$
+```
 
-$$
+```math
 Y_{0,\mathrm{im}}=A_{\mathrm{im}}+B_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 D_{\mathrm{re}}=A_{\mathrm{re}}-B_{\mathrm{re}}
-$$
+```
 
-$$
+```math
 D_{\mathrm{im}}=A_{\mathrm{im}}-B_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 Y_{1,\mathrm{re}}=D_{\mathrm{re}}W_{\mathrm{re}}-D_{\mathrm{im}}W_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 Y_{1,\mathrm{im}}=D_{\mathrm{re}}W_{\mathrm{im}}+D_{\mathrm{im}}W_{\mathrm{re}}
-$$
+```
 
 Complex values are represented as separate real and imaginary signals. The six scalar inputs are `a_re`, `a_im`, `b_re`, `b_im`, `w_re`, and `w_im`. The four scalar outputs are `y0_re`, `y0_im`, `y1_re`, and `y1_im`.
 
@@ -90,8 +90,8 @@ All values use signed fixed-point representation. Inputs are 16 bits; the exact 
 
 The MVP implements one unambiguous Butterfly dataflow and does not support both DIT and DIF. DIF defines the operation order as:
 
-1. compute $A+B$ and $A-B$;
-2. multiply $A-B$ by $W$.
+1. compute `A+B` and `A-B`;
+2. multiply `A-B` by `W`.
 
 This order creates natural arithmetic boundaries. V1 is therefore frozen as a three-stage registered implementation: stage 1 performs add/subtract and aligns the twiddle factor, stage 2 performs four parallel real multiplications, and stage 3 performs product combination, rounding, saturation, and output registration. This partition has passed functional verification and an open-source ASIC implementation flow, but it is one valid design point rather than a global optimum.
 
@@ -103,7 +103,7 @@ The MVP does not implement a complete FFT. A complete FFT would add inter-stage 
 
 ### 4.3 Externally Supplied Twiddle Factor
 
-The processing element does not contain a twiddle ROM or a real-time coefficient generator. Adding either would require decisions about FFT size, coefficient count and quantization, address generation, ROM latency, alignment with $A$ and $B$, synchronous versus asynchronous reads, and whether arbitrary $W$ values remain legal. Those questions bind the PE to a specific FFT system without strengthening the arithmetic datapath loop, so $W$ remains an input.
+The processing element does not contain a twiddle ROM or a real-time coefficient generator. Adding either would require decisions about FFT size, coefficient count and quantization, address generation, ROM latency, alignment with `A` and `B`, synchronous versus asynchronous reads, and whether arbitrary `W` values remain legal. Those questions bind the PE to a specific FFT system without strengthening the arithmetic datapath loop, so `W` remains an input.
 
 ### 4.4 `valid_in/valid_out` Interface
 
@@ -112,7 +112,7 @@ Clocked V1 uses `valid_in` and `valid_out` to mark transactions. It has no `read
 In this MVP, “streaming” means:
 
 - consecutive transactions are allowed;
-- V1 targets an initiation interval of $II=1$, accepting at most one new $A,B,W$ tuple per cycle; and
+- V1 targets an initiation interval of `II=1`, accepting at most one new `A,B,W` tuple per cycle; and
 - `valid` is delayed by the same pipeline latency as its data.
 
 It does not mean that a complete streaming FFT is implemented. Backpressure would require pipeline stall, state retention, and restart behavior and would substantially expand the control and verification state space.
@@ -140,11 +140,11 @@ Implementation fairness is established by `butterfly_comb_eval` and `butterfly_p
 
 V1 stages are:
 
-1. compute and register $A+B$ and $A-B$, while registering the transaction-aligned $W$;
-2. compute and register four real products, while delaying the wide $Y_0$ sum by one cycle;
-3. combine products, round $Y_1$, saturate all four components, and register outputs and flags.
+1. compute and register `A+B` and `A-B`, while registering the transaction-aligned `W`;
+2. compute and register four real products, while delaying the wide `Y_0` sum by one cycle;
+3. combine products, round `Y_1`, saturate all four components, and register outputs and flags.
 
-V1 has no `ready`, backpressure, or pipeline stall. Invalid input cycles create bubbles that propagate without compressing transaction spacing. An input accepted at rising edge $t$ with `valid_in=1` produces its output at edge $t+2$ with `valid_out=1`. Core latency is therefore two cycles and initiation interval is $II=1$.
+V1 has no `ready`, backpressure, or pipeline stall. Invalid input cycles create bubbles that propagate without compressing transaction spacing. An input accepted at rising edge `t` with `valid_in=1` produces its output at edge `t+2` with `valid_out=1`. Core latency is therefore two cycles and initiation interval is `II=1`.
 
 Any later repartitioning must create a new version rather than silently changing the frozen V1 definition.
 
@@ -153,11 +153,11 @@ Any later repartitioning must create a new version rather than silently changing
 | Metric | Meaning |
 |---|---|
 | Functional correctness | Bit-exact agreement with the reference model |
-| Maximum clock frequency, $F_{\max}$ | Highest estimated operating frequency under a stated flow and constraints |
+| Maximum clock frequency, `F_max` | Highest estimated operating frequency under a stated flow and constraints |
 | Critical path | Actual combinational path limiting clock frequency |
 | Cycle latency | Number of clock cycles from input to corresponding output |
 | Time latency | Cycle latency multiplied by the operating clock period |
-| Initiation interval, $II$ | Minimum cycle spacing between accepted transactions |
+| Initiation interval, `II` | Minimum cycle spacing between accepted transactions |
 | Throughput | Accepted input tuples per unit time in steady state |
 | Logic resources | Mapped standard cells and reported equivalent resources |
 | Register count | Storage required by pipeline and state retention |
@@ -165,7 +165,7 @@ Any later repartitioning must create a new version rather than silently changing
 | Design and verification complexity | Added state, corner cases, and verification burden |
 | Power | Vectorless versus activity-driven estimates, with explicit evidence limits |
 
-Every comparison must identify which dimensions improve and which regress. Pipelining may raise $F_{\max}$ while increasing register count and cycle latency; its value depends on throughput, clock, resource, and interface requirements.
+Every comparison must identify which dimensions improve and which regress. Pipelining may raise `F_max` while increasing register count and cycle latency; its value depends on throughput, clock, resource, and interface requirements.
 
 ## 7. Explicitly Excluded Scope
 
@@ -211,9 +211,9 @@ These may become future work but must not be added before the MVP loop is closed
 
 - Both versions complete synthesis and place-and-route under comparable conditions.
 - Area, timing, power, critical-path, and electrical-violation reports are retained.
-- Highest tested passing point, latency, $II$, throughput, area, and register cost are compared.
+- Highest tested passing point, latency, `II`, throughput, area, and register cost are compared.
 - Tool, library, constraint, and power-activity assumptions accompany every result.
-- Typical-corner open-source results are not described as signoff PPA or absolute $F_{\max}$.
+- Typical-corner open-source results are not described as signoff PPA or absolute `F_max`.
 
 ### 8.4 Engineering Loop
 
@@ -233,15 +233,15 @@ Numerical behavior belongs in `02_fixed_point_spec_EN.md`; microarchitecture and
 
 ### 10.1 Established Engineering Facts
 
-- The exact sum or difference of two signed $N$-bit values may require $N+1$ bits.
+- The exact sum or difference of two signed `N`-bit values may require `N+1` bits.
 - Pipeline registers split combinational paths but add state and cycle latency.
 - Mapping, physical implementation, and timing depend on tools, libraries, constraints, and strategy.
-- $F_{\max}$, latency, and throughput are distinct metrics.
+- `F_max`, latency, and throughput are distinct metrics.
 
 ### 10.2 Judgments Supported by Current Experiments
 
 - Frozen three-stage V1 effectively splits V0's long combinational path.
-- Because both versions support $II=1$, V1's throughput gain comes from higher reachable frequency, not more transactions per cycle.
+- Because both versions support `II=1`, V1's throughput gain comes from higher reachable frequency, not more transactions per cycle.
 - The gain costs pipeline registers, clock-network area, and cycle latency.
 - Current vectorless power estimates favor V1, but do not prove real FFT workload power.
 
@@ -252,7 +252,7 @@ Exact values and applicability conditions are defined in `05_synthesis_and_ppa_a
 1. Which arithmetic nodes lie on the actual worst setup paths of V0 and V1?
 2. Does the power ranking remain after common VCD/SAIF activity is supplied?
 3. Are area and frequency gains stable across seeds, PVT corners, or libraries?
-4. Does the $F_{\max}$ gain justify additional registers, latency, and complexity?
+4. Does the `F_max` gain justify additional registers, latency, and complexity?
 5. Would the selected architecture remain appropriate under lower-area, lower-latency, or lower-power objectives?
 6. Which conclusions are specific to the current Nangate45 setup and cannot be generalized to a product?
 

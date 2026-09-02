@@ -32,9 +32,9 @@ The `*_eval` modules exist only for synthesis, timing, and physical comparison. 
 
 ### 3.1 Function
 
-$$
+```math
 Y_0=A+B,\qquad Y_1=(A-B)W
-$$
+```
 
 Stable inputs produce stable outputs after combinational propagation. V0 retains no state and defines no result cycle.
 
@@ -64,16 +64,16 @@ All data ports are signed two's-complement Q1.15.
 
 | Port | Direction | Width | Meaning |
 |---|---|---:|---|
-| `a_re`, `a_im` | input | 16 | Real/imaginary $A$ |
-| `b_re`, `b_im` | input | 16 | Real/imaginary $B$ |
-| `w_re`, `w_im` | input | 16 | Real/imaginary $W$ |
+| `a_re`, `a_im` | input | 16 | Real/imaginary `A` |
+| `b_re`, `b_im` | input | 16 | Real/imaginary `B` |
+| `w_re`, `w_im` | input | 16 | Real/imaginary `W` |
 
 ### 4.2 Outputs
 
 | Port | Direction | Width | Meaning |
 |---|---|---:|---|
-| `y0_re`, `y0_im` | output | 16 | Quantized real/imaginary $Y_0$ |
-| `y1_re`, `y1_im` | output | 16 | Quantized real/imaginary $Y_1$ |
+| `y0_re`, `y0_im` | output | 16 | Quantized real/imaginary `Y_0` |
+| `y1_re`, `y1_im` | output | 16 | Quantized real/imaginary `Y_1` |
 | `sat_y0_re`, `sat_y0_im` | output | 1 | Actual clamping of each Y0 component |
 | `sat_y1_re`, `sat_y1_im` | output | 1 | Actual clamping of each Y1 component |
 
@@ -85,15 +85,15 @@ Flags follow `02_fixed_point_spec_EN.md`: they indicate actual out-of-range clam
 
 Inputs are sign-extended before computing:
 
-$$
+```math
 S_{\mathrm{re}}=A_{\mathrm{re}}+B_{\mathrm{re}},\quad
 S_{\mathrm{im}}=A_{\mathrm{im}}+B_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 D_{\mathrm{re}}=A_{\mathrm{re}}-B_{\mathrm{re}},\quad
 D_{\mathrm{im}}=A_{\mathrm{im}}-B_{\mathrm{im}}
-$$
+```
 
 All four results are signed 17-bit Q2.15. RTL controls extension explicitly rather than relying on expression-context width.
 
@@ -103,20 +103,20 @@ The sums already have 15 fractional bits. Each is range-checked without rounding
 
 ### 5.3 Four Parallel Real Multipliers
 
-$$
+```math
 M_0=D_{\mathrm{re}}W_{\mathrm{re}},\quad
 M_1=D_{\mathrm{im}}W_{\mathrm{im}},\quad
 M_2=D_{\mathrm{re}}W_{\mathrm{im}},\quad
 M_3=D_{\mathrm{im}}W_{\mathrm{re}}
-$$
+```
 
 All four multipliers exist concurrently and are not time-multiplexed. Each product is signed 33-bit Q3.30. V0 does not use a three-multiply complex formulation because that would introduce different add/subtract ranges and error paths, confounding the pipeline comparison.
 
 ### 5.4 Product Combination
 
-$$
+```math
 P_{\mathrm{re}}=M_0-M_1,\qquad P_{\mathrm{im}}=M_2+M_3
-$$
+```
 
 Each 33-bit product is explicitly sign-extended to 34 bits before combination. Results remain signed Q4.30 until quantization. The extra bit protects against premature SystemVerilog expression overflow; it is not a claim of additional fractional precision.
 
@@ -124,7 +124,7 @@ Each 33-bit product is explicitly sign-extended to 34 bits before combination. R
 
 Each component follows:
 
-$$
+```math
 \text{34-bit Q4.30}
 \rightarrow
 \text{RNE ties-to-even}
@@ -132,7 +132,7 @@ $$
 \text{range check}
 \rightarrow
 \text{16-bit Q1.15 saturation}
-$$
+```
 
 Rounding observes the retained value, 15 discarded bits, exact-half condition, retained LSB, and sign. The implementation uses the two's-complement `guard/sticky/kept_lsb` rule and must not depend on host-language defaults. Saturation flags are determined independently after rounding.
 
@@ -141,10 +141,10 @@ Rounding observes the retained value, 15 discarded bits, exact-half condition, r
 | Node | Count | Width | Format | Next operation |
 |---|---:|---:|---|---|
 | Input components | 6 | 16 | signed Q1.15 | Add/subtract or multiply input |
-| $S_{\mathrm{re}},S_{\mathrm{im}}$ | 2 | 17 | signed Q2.15 | Y0 saturation |
-| $D_{\mathrm{re}},D_{\mathrm{im}}$ | 2 | 17 | signed Q2.15 | Four multipliers |
-| $M_0$–$M_3$ | 4 | 33 | signed Q3.30 | Extend and combine |
-| $P_{\mathrm{re}},P_{\mathrm{im}}$ | 2 | 34 | signed Q4.30 | RNE and saturation |
+| `S_re,S_im` | 2 | 17 | signed Q2.15 | Y0 saturation |
+| `D_re,D_im` | 2 | 17 | signed Q2.15 | Four multipliers |
+| `M_0`–`M_3` | 4 | 33 | signed Q3.30 | Extend and combine |
+| `P_re,P_im` | 2 | 34 | signed Q4.30 | RNE and saturation |
 | Output components | 4 | 16 | signed Q1.15 | Module outputs |
 | Component flags | 4 | 1 | logic | Module outputs |
 
@@ -161,7 +161,7 @@ Requirements:
 - do not instantiate vendor DSP/multiplier/saturation primitives;
 - do not add multiplier sharing, FSMs, or multicycle control;
 - do not add vector-specific constant assumptions; and
-- do not depend on $|W|=1$ for correctness.
+- do not depend on `|W| = 1` for correctness.
 
 Whether helpers such as `sat_q15` are separate modules is code organization, not a new microarchitecture.
 
@@ -169,7 +169,7 @@ Whether helpers such as `sat_q15` are separate modules is code organization, not
 
 ### 8.1 Purpose
 
-V0 port-to-port delay is not directly comparable to pipelined register-to-register $F_{\max}$. `butterfly_comb_eval` and `butterfly_pipe_eval` provide equivalent external register boundaries so the implementation flow compares each design's worst registered path.
+V0 port-to-port delay is not directly comparable to pipelined register-to-register `F_max`. `butterfly_comb_eval` and `butterfly_pipe_eval` provide equivalent external register boundaries so the implementation flow compares each design's worst registered path.
 
 ```mermaid
 flowchart LR
@@ -181,9 +181,9 @@ flowchart LR
 
 The primary timing condition is:
 
-$$
+```math
 T_{\mathrm{clk\text{-}to\text{-}Q}}+T_{\mathrm{comb}}+T_{\mathrm{setup}}\le T_{\mathrm{clk}}
-$$
+```
 
 ### 8.2 Responsibilities
 
@@ -201,7 +201,7 @@ Both wrappers use synchronous active-high reset:
 - invalid output cycles clear four saturation flags;
 - `butterfly_comb_eval` input-edge-to-output-valid latency is one cycle;
 - `butterfly_pipe_eval` latency is four cycles; and
-- both retain $II=1$.
+- both retain `II=1`.
 
 The four V1-wrapper cycles comprise one external input boundary, two core cycles, and one external output boundary. This does not change the V1 core's two-cycle definition.
 
@@ -227,17 +227,17 @@ Record multiplier mapping, automatic retiming, register replication or logic res
 
 | Metric | Definition |
 |---|---|
-| $F_{\max}$ | Highest passing frequency under stated conditions |
+| `F_max` | Highest passing frequency under stated conditions |
 | Critical path | Worst registered path and arithmetic nodes |
-| Cycle latency $L$ | Accepted input to corresponding valid output |
-| Absolute latency | $L/F_{\max}$ |
-| Initiation interval $II$ | Minimum transaction spacing |
-| Peak throughput | $F_{\max}/II$ transactions/s |
+| Cycle latency `L` | Accepted input to corresponding valid output |
+| Absolute latency | `L/F_max` |
+| Initiation interval `II` | Minimum transaction spacing |
+| Peak throughput | `F_max/II` transactions/s |
 | Arithmetic resources | Standard cells, combinational area, equivalent resources |
 | Register resources | External-boundary and internal-pipeline registers separately |
 | Control complexity | Valid alignment, reset, and verification burden |
 
-Higher $F_{\max}$ alone does not establish overall superiority.
+Higher `F_max` alone does not establish overall superiority.
 
 ## 10. Model, RTL, and Testbench Responsibilities
 
@@ -253,7 +253,7 @@ V0 is checked after combinational settling. V1 enqueues the Python expectation w
 
 The original V0 worst-path candidate was:
 
-$$
+```math
 \text{input register}
 \rightarrow
 \text{17-bit subtract}
@@ -267,7 +267,7 @@ $$
 \text{saturation}
 \rightarrow
 \text{output register}
-$$
+```
 
 Y0 was expected to be shorter because it contains only add and saturation. Post-route evidence supports greater passing frequency and common-frequency margin for V1. Exact values and limitations are in `05_synthesis_and_ppa_analysis_EN.md`.
 
@@ -279,27 +279,27 @@ Implementation analysis records endpoints, arithmetic logic, multiplier mapping,
 
 | Stage | Combinational work | Registered at stage end |
 |---|---|---|
-| 1 | $S=A+B$, $D=A-B$ | `sum_*_s1`, `diff_*_s1`, `w_*_s1`, `valid_s1` |
+| 1 | `S=A+B`, `D=A-B` | `sum_*_s1`, `diff_*_s1`, `w_*_s1`, `valid_s1` |
 | 2 | Four parallel real multiplications | `m0_s2`–`m3_s2`, `sum_*_s2`, `valid_s2` |
 | 3 | 34-bit combination, Y1 RNE, four saturations | Four outputs, four flags, `valid_out` |
 
-$W$ must be registered in stage 1 to prevent `diff_A` from pairing with `W_B`. Wide Y0 sums bypass stage-2 arithmetic through `sum_*_s2`, rejoining the same transaction's Y1 in stage 3.
+`W` must be registered in stage 1 to prevent `diff_A` from pairing with `W_B`. Wide Y0 sums bypass stage-2 arithmetic through `sum_*_s2`, rejoining the same transaction's Y1 in stage 3.
 
 ### 12.2 Latency, II, and Throughput
 
-For a transaction satisfying `rst=0 && valid_in=1` at edge $t$:
+For a transaction satisfying `rst=0 && valid_in=1` at edge `t`:
 
-- it enters stage 1 at $t$;
-- stage 2 at $t+1$; and
-- writes output registers with `valid_out=1` at $t+2$.
+- it enters stage 1 at `t`;
+- stage 2 at `t+1`; and
+- writes output registers with `valid_out=1` at `t+2`.
 
 Under the input-edge-to-output-valid-edge convention:
 
-$$
+```math
 L=2\ \text{cycles},\qquad II=1\ \text{cycle}
-$$
+```
 
-Peak throughput is one Butterfly transaction per cycle, or $f_{\mathrm{clk}}$ transactions/s.
+Peak throughput is one Butterfly transaction per cycle, or `f_clk` transactions/s.
 
 ### 12.3 Valid and Bubbles
 
@@ -335,5 +335,5 @@ Inter-stage registers use nonblocking `<=` in `always_ff`, so each stage observe
 6. The two evaluation wrappers add equivalent external boundaries only for fair physical analysis.
 7. V0 and V1 share numerical behavior, multiplier structure, library, flow, constraints, and evaluation boundaries.
 8. The Python model defines values, RTL defines structure/timing, and testbenches map transactions.
-9. V1 is a three-stage fixed-latency pipeline with two-cycle core latency, $II=1$, synchronous active-high reset, and no backpressure.
+9. V1 is a three-stage fixed-latency pipeline with two-cycle core latency, `II=1`, synchronous active-high reset, and no backpressure.
 10. Both cores, wrappers, self-checking testbenches, and fair ASIC comparisons are complete; evidence is in `04_verification_plan_EN.md` and `05_synthesis_and_ppa_analysis_EN.md`.

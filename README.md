@@ -36,25 +36,25 @@ These figures are comparative results from an open educational PDK and an open-s
 
 The implemented DIF Radix-2 butterfly is:
 
-$$
+```math
 Y_0=A+B
-$$
+```
 
-$$
+```math
 Y_1=(A-B)W
-$$
+```
 
 For complex values:
 
-$$
+```math
 Y_{1,\mathrm{re}}=(A_{\mathrm{re}}-B_{\mathrm{re}})W_{\mathrm{re}}
 -(A_{\mathrm{im}}-B_{\mathrm{im}})W_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 Y_{1,\mathrm{im}}=(A_{\mathrm{re}}-B_{\mathrm{re}})W_{\mathrm{im}}
 +(A_{\mathrm{im}}-B_{\mathrm{im}})W_{\mathrm{re}}
-$$
+```
 
 `W` is supplied externally. The datapath accepts any legal Q1.15 complex encoding and does not assume or check that `|W| = 1`.
 
