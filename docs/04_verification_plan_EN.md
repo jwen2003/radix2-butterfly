@@ -124,9 +124,9 @@ Checks include:
 
 - exact transaction alignment;
 - continuous valid output after pipeline fill under continuous input;
-- $II=1$ acceptance;
+- `II=1` acceptance;
 - bubble propagation without transaction reordering or compression; and
-- alignment of $W$ with its corresponding data.
+- alignment of `W` with its corresponding data.
 
 ### 7.2 Bubble Behavior
 
@@ -177,7 +177,7 @@ The simulation baseline is Verilator 5.032. Testbenches avoid the unsupported `$
 ### 9.2 Timing Semantics
 
 - V1 core latency is exactly two cycles.
-- Consecutive transactions move at $II=1$ without reordering.
+- Consecutive transactions move at `II=1` without reordering.
 - Bubbles propagate cycle by cycle.
 - Reset discards every in-flight transaction.
 - A new transaction may be accepted immediately after reset release.

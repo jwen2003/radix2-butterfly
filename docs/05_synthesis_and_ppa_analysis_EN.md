@@ -21,7 +21,7 @@ Both implement the same DIF Radix-2 function, Q1.15 I/O, RNE, saturation policy,
 
 `butterfly_comb_eval` and `butterfly_pipe_eval` add equivalent external input/output register boundaries. They standardize clock, reset, valid, input load, and output load while making arithmetic paths register-to-register.
 
-At wrapper level, V0 latency is one cycle, V1 latency is four cycles, and both have $II=1$. The wrappers establish physical comparison boundaries and do not redefine core latency.
+At wrapper level, V0 latency is one cycle, V1 latency is four cycles, and both have `II=1`. The wrappers establish physical comparison boundaries and do not redefine core latency.
 
 ## 3. Tool and Process Environment
 
@@ -103,7 +103,7 @@ The tool includes V1's greater register and clock power. Lower total power is dr
 
 ### 6.4 Estimated Energy per Operation
 
-At 400 MHz and $II=1$:
+At 400 MHz and `II=1`:
 
 | Design | Vectorless estimated energy |
 |---|---:|
@@ -155,7 +155,7 @@ V0 would be unacceptable in a real design and V1 also needs improvement. However
 | V0 | 425 MHz | +0.02 ns | +0.06 ns | 425 Mops/s |
 | V1 | 640 MHz | +0.03 ns | +0.02 ns | 640 Mops/s |
 
-Both have final TNS=0 and no max-transition, fanout, or capacitance violations. Because both have $II=1$, the 50.6% tested frequency gain translates directly into steady-state throughput. These are the highest passing integer points in the current scan, not absolute Fmax.
+Both have final TNS=0 and no max-transition, fanout, or capacitance violations. Because both have `II=1`, the 50.6% tested frequency gain translates directly into steady-state throughput. These are the highest passing integer points in the current scan, not absolute Fmax.
 
 ### 8.2 Peak Implementation Cost
 
@@ -251,7 +251,7 @@ Repair was deferred to later stages. Final reports show passing setup/hold, TNS=
 - At 400 MHz, V1 gains substantial margin for about 16.4% area.
 - At 500 MHz, V0 fails and V1 passes.
 - The highest tested passing point increases from 425 to 640 MHz.
-- With equal $II=1$, tested peak throughput rises about 50.6%.
+- With equal `II=1`, tested peak throughput rises about 50.6%.
 - V1 adds pipeline/clock cost but reduces timing-repair pressure.
 - Final physical inspection confirms V0's full Y1 path and V1's stage-2 multiplier path.
 - V1 contains high-fanout data buffering and HA/FA partial-product reduction; splitting stage 3 cannot shorten the current path.

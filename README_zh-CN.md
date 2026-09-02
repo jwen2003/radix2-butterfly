@@ -36,25 +36,25 @@
 
 实现的 DIF Radix-2 Butterfly 为：
 
-$$
+```math
 Y_0=A+B
-$$
+```
 
-$$
+```math
 Y_1=(A-B)W
-$$
+```
 
 对于复数：
 
-$$
+```math
 Y_{1,\mathrm{re}}=(A_{\mathrm{re}}-B_{\mathrm{re}})W_{\mathrm{re}}
 -(A_{\mathrm{im}}-B_{\mathrm{im}})W_{\mathrm{im}}
-$$
+```
 
-$$
+```math
 Y_{1,\mathrm{im}}=(A_{\mathrm{re}}-B_{\mathrm{re}})W_{\mathrm{im}}
 +(A_{\mathrm{im}}-B_{\mathrm{im}})W_{\mathrm{re}}
-$$
+```
 
 `W` 由外部提供。数据通路接受任意合法的 Q1.15 复数编码，不假设也不检查 `|W| = 1`。
 
