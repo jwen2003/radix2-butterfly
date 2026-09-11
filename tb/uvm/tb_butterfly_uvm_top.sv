@@ -54,4 +54,9 @@ module tb_butterfly_uvm_top;
         run_test("butterfly_test");
     end
 
+    initial begin
+        #1ms;
+        $fatal(1, "UVM simulation timeout");
+    end
+
 endmodule

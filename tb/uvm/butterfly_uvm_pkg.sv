@@ -15,6 +15,19 @@ package butterfly_uvm_pkg;
         rand logic signed [15:0] b_im;
         rand logic signed [15:0] w_re;
         rand logic signed [15:0] w_im;
+        rand int unsigned        idle_cycles_before;
+
+        constraint idle_cycles_range_c {
+            idle_cycles_before inside {[0:3]};
+        }
+
+        constraint idle_cycles_distribution_c {
+            idle_cycles_before dist {
+                0     := 70,
+                1     := 20,
+                [2:3] :/ 10
+            };
+        }
 
         logic                     rst;
         logic                     valid_out;
@@ -36,6 +49,7 @@ package butterfly_uvm_pkg;
             `uvm_field_int(b_im, UVM_DEFAULT)
             `uvm_field_int(w_re, UVM_DEFAULT)
             `uvm_field_int(w_im, UVM_DEFAULT)
+            `uvm_field_int(idle_cycles_before, UVM_DEFAULT)
             `uvm_field_int(rst, UVM_DEFAULT)
             `uvm_field_int(valid_out, UVM_DEFAULT)
             `uvm_field_int(y0_re, UVM_DEFAULT)
@@ -82,6 +96,7 @@ package butterfly_uvm_pkg;
             req.b_im = b_im[15:0];
             req.w_re = w_re[15:0];
             req.w_im = w_im[15:0];
+            req.idle_cycles_before = 0;
             finish_item(req);
         endtask
 
@@ -96,6 +111,33 @@ package butterfly_uvm_pkg;
             send_directed("y0_neg_sat",-32768,      0,     -1,      0,  32767,      0);
             send_directed("max_opposed",32767, -32768, -32768,  32767, -32768, -32768);
             send_directed("mixed_signs",-16384,  8192,   4096, -24576,  23170, -23170);
+        endtask
+    endclass
+
+    class butterfly_random_sequence extends uvm_sequence #(butterfly_item);
+        `uvm_object_utils(butterfly_random_sequence)
+
+        int unsigned num_transactions = 1000;
+
+        function new(string name = "butterfly_random_sequence");
+            super.new(name);
+        endfunction
+
+        task body();
+            butterfly_item req;
+            int unsigned index;
+
+            for (index = 0; index < num_transactions; index++) begin
+                req = butterfly_item::type_id::create(
+                    $sformatf("random_transaction_%0d", index));
+                start_item(req);
+                if (!req.randomize()) begin
+                    `uvm_fatal("RANDFAIL", $sformatf(
+                        "randomization failed for transaction %0d", index))
+                end
+                req.item_name = $sformatf("random_transaction_%0d", index);
+                finish_item(req);
+            end
         endtask
     endclass
 
@@ -144,6 +186,15 @@ package butterfly_uvm_pkg;
 
             forever begin
                 seq_item_port.get_next_item(req);
+
+                // The bus is already idle at this point. Each wait below spans
+                // one complete invalid sampling edge. A zero gap performs no
+                // wait, so consecutive items remain valid on adjacent cycles.
+                repeat (req.idle_cycles_before) begin
+                    @(vif.driver_cb);
+                    drive_idle();
+                end
+
                 vif.driver_cb.valid_in <= 1'b1;
                 vif.driver_cb.a_re     <= req.a_re;
                 vif.driver_cb.a_im     <= req.a_im;
@@ -441,10 +492,15 @@ package butterfly_uvm_pkg;
 
         function void report_phase(uvm_phase phase);
             super.report_phase(phase);
-            if (error_count == 0)
+            `uvm_info("SUMMARY", $sformatf(
+                "inputs=%0d outputs_checked=%0d remaining_queue=%0d errors=%0d",
+                inputs_seen, outputs_checked, expected_queue.size(), error_count),
+                UVM_LOW)
+            if (error_count == 0) begin
                 `uvm_info("PASS", $sformatf(
-                    "checked %0d transactions with two-cycle latency",
+                    "directed + constrained-random passed: %0d transactions with two-cycle latency",
                     outputs_checked), UVM_LOW)
+            end
         endfunction
     endclass
 
@@ -515,10 +571,27 @@ package butterfly_uvm_pkg;
         endfunction
 
         task run_phase(uvm_phase phase);
-            butterfly_sequence seq;
+            butterfly_sequence directed_seq;
+            butterfly_random_sequence random_seq;
+            int unsigned num_random;
+
             phase.raise_objection(this);
-            seq = butterfly_sequence::type_id::create("seq");
-            seq.start(env.agent.sequencer);
+
+            num_random = 1000;
+            if ($value$plusargs("NUM_RANDOM=%d", num_random)) begin
+                `uvm_info("CONFIG", $sformatf(
+                    "NUM_RANDOM override: %0d", num_random), UVM_LOW)
+            end else begin
+                `uvm_info("CONFIG", $sformatf(
+                    "NUM_RANDOM default: %0d", num_random), UVM_LOW)
+            end
+
+            directed_seq = butterfly_sequence::type_id::create("directed_seq");
+            directed_seq.start(env.agent.sequencer);
+
+            random_seq = butterfly_random_sequence::type_id::create("random_seq");
+            random_seq.num_transactions = num_random;
+            random_seq.start(env.agent.sequencer);
 
             // Allow the final accepted input to traverse the two-cycle core,
             // plus additional monitor cycles before ending the run phase.
