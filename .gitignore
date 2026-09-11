@@ -71,3 +71,5 @@ reports/**
 !reports/nangate45/butterfly_pipe_eval/base/6_finish.rpt
 !reports/nangate45/butterfly_pipe_eval/fmax_640mhz/
 !reports/nangate45/butterfly_pipe_eval/fmax_640mhz/6_finish.rpt
+
+/tb/uvm/Butterfly_UVM/
