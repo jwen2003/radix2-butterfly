@@ -28,6 +28,7 @@
 - 组合逻辑与流水线两种 RTL 实现
 - 位精确的整数 Python 参考模型
 - 文件驱动、自检查的 SystemVerilog 测试平台
+- 在 XSim 2025.1 下对 `butterfly_pipe` 进行 UVM 1.2 定向和约束随机验证
 - 1,071 个共用向量，覆盖定向、旋转因子和可复现随机测试
 - 通用 Yosys 综合和 Nangate45/OpenROAD 物理实现
 - 布局布线后关键路径重建和基于证据的设计决策
@@ -151,6 +152,8 @@ V0 和 V1 使用相同的 CSV 结果。V1 测试平台还检查：
 - 复位释放后立即接收输入。
 
 在 Verilator 5.032 下，两个自检查回归均通过全部 1,071 个向量且无失配。
+
+独立的 `butterfly_pipe` UVM 1.2 环境已经在 Vivado XSim 2025.1 下通过 7 笔定向事务和 1,000 笔带随机 bubble 的约束随机事务。其架构、结果和当前限制见 [`07_uvm_verification.md`](docs/07_uvm_verification_zh-CN.md)；这些 UVM 事务与上述 1,071 个 CSV 向量相互独立。
 
 ### 生成共用向量文件
 
@@ -397,6 +400,7 @@ radix2-butterfly/
 4. [`04_verification_plan_zh-CN.md`](docs/04_verification_plan_zh-CN.md) — 参考模型、向量和通过标准
 5. [`05_synthesis_and_ppa_analysis_zh-CN.md`](docs/05_synthesis_and_ppa_analysis_zh-CN.md) — 受控的实现结果
 6. [`06_design_reconstruction_zh-CN.md`](docs/06_design_reconstruction_zh-CN.md) — 布局布线后路径重建和改进决策
+7. [`07_uvm_verification_zh-CN.md`](docs/07_uvm_verification_zh-CN.md) — UVM 架构、约束随机结果与限制
 
 ## 范围边界
 

@@ -28,6 +28,7 @@ These figures are comparative results from an open educational PDK and an open-s
 - Combinational and pipelined RTL implementations
 - Bit-exact integer Python reference model
 - File-driven, self-checking SystemVerilog testbenches
+- UVM 1.2 directed and constrained-random verification of `butterfly_pipe` under XSim 2025.1
 - 1,071 common directed, twiddle, and reproducible random vectors
 - Generic Yosys synthesis and Nangate45/OpenROAD physical implementation
 - Post-route critical-path reconstruction and evidence-driven design decisions
@@ -151,6 +152,8 @@ V0 and V1 consume the same CSV results. The V1 testbench additionally checks:
 - immediate acceptance after reset release.
 
 Both self-checking regressions pass all 1,071 vectors with no mismatches under Verilator 5.032.
+
+The separate UVM 1.2 environment for `butterfly_pipe` has passed 7 directed plus 1,000 constrained-random transactions with randomized bubbles under Vivado XSim 2025.1. See [`07_uvm_verification.md`](docs/07_uvm_verification_EN.md) for its architecture, results, and current limitations; these UVM transactions are distinct from the 1,071 CSV vectors above.
 
 ### Generate the Common Vector File
 
@@ -397,6 +400,7 @@ The detailed engineering record is organized as a decision chain:
 4. [`04_verification_plan.md`](docs/04_verification_plan_EN.md) — reference model, vectors, and pass criteria
 5. [`05_synthesis_and_ppa_analysis.md`](docs/05_synthesis_and_ppa_analysis_EN.md) — controlled implementation results
 6. [`06_design_reconstruction.md`](docs/06_design_reconstruction_EN.md) — post-route path reconstruction and improvement decision
+7. [`07_uvm_verification.md`](docs/07_uvm_verification_EN.md) — UVM architecture, constrained-random results, and limitations
 
 ## Scope Boundaries
 
